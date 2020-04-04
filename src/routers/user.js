@@ -17,7 +17,7 @@ router.get('/users/me',auth, async (req, res) => {
    res.status(201).send(req.user)
 })
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/me',auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdate = ['name', 'email', 'password', 'birthDate', 'gender', 'avatar'];
     const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
@@ -25,19 +25,25 @@ router.patch('/users/:id', async (req, res) => {
         return res.status(400).send({ 'error': 'Modifications invalides' })
     }
     try {
-        const user = await User.findById(req.params.id)
+        const user = req.user
         updates.forEach((update) => user[update] = req.body[update])
         await user.save()
-        // const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
-        if (!user) {
-            return res.status(404).send({'error' : 'operation non effectuée'})
-        }
         return res.send(user)
     } catch (error) {
         res.status(404).send(error)
     }
 })
 
+router.delete('/users/me',auth,async(req,res)=>{
+    try {
+        await req.user.remove() //delete a user it's like save()
+        res.send(req.user)
+
+    } catch (error) {
+        res.status(500).send()
+    }
+
+})
 
 router.post('/getuser', async (req, res) => {
     const id = req.body.userId
@@ -54,9 +60,9 @@ router.post('/users/login', async (req, res)=>{
     try {
         const user = await User.findByCredentials(req.body.email,req.body.password);
         const token = await user.generateToken()        
-        return res.send({user: user,token})
-    } catch (error) {
-        res.status(400).send({error})
+        return res.send({user,token})
+    } catch (e) {
+        res.status(400).send({'error': 'Cet utilisateur n\'existe pas'})
     }
 })
 router.post('/users/logout',auth, async (req, res)=>{
