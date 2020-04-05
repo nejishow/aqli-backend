@@ -6,6 +6,8 @@ const ProductType = require("../models/productType")
 const multer = require('multer')
 const auth = require('../middleware/auth')
 
+//post
+
 router.post('/category', auth, async (req, res) => {
     const category = new Category(req.body)
     try {
@@ -33,6 +35,8 @@ router.post('/productType', auth, async (req, res) => {
         res.status(400).send(error)
     }
 })
+
+//patch
 
 router.patch('/category', auth, async (req, res) => {
     const updates = Object.keys(req.body)
@@ -83,6 +87,9 @@ router.patch('/productType', auth, async (req, res) => {
     }
 })
 
+
+//delete
+
 router.delete('/category', auth, async (req, res) => {
     try {
         const category = await Category.findById({ _id: req.body._id })
@@ -117,20 +124,13 @@ router.delete('/productType', auth, async (req, res) => {
 
 })
 
-router.get('/productType', auth, async (req, res) => {
-    try {
-        const productType = await ProductType.findById({ _id: req.body._id })
-        if (!productType) {
-            return res.status(400).send({ 'error': 'Type de produit inexistant' })
-        }
-        return res.send(productType)
-    } catch (error) {
-        res.status(500).send()
-    }
-})
+
+//get
+
+
 router.get('/allProductType', auth, async (req, res) => {
     try {
-        const productTypes = await ProductType.findById({})
+        const productTypes = await ProductType.find({})
         if (!productTypes) {
             return res.status(400).send({ 'error': 'Type de produit inexistant' })
         }
@@ -140,20 +140,9 @@ router.get('/allProductType', auth, async (req, res) => {
     }
 })
 
-router.get('/category', auth, async (req, res) => {
-    try {
-        const category = await Category.findById({ _id: req.body._id })
-        if (!category) {
-            return res.status(400).send({ 'error': 'Catégorie inexistante' })
-        }
-        return res.send(category)
-    } catch (error) {
-        res.status(500).send()
-    }
-})
 router.get('/allCategory', auth, async (req, res) => {
     try {
-        const categories = await Category.findById({})
+        const categories = await Category.find({})
         if (!categories) {
             return res.status(400).send({ 'error': 'Catégorie inexistante' })
         }
@@ -163,20 +152,9 @@ router.get('/allCategory', auth, async (req, res) => {
     }
 })
 
-router.get('/subCategory', auth, async (req, res) => {
-    try {
-        const subCategory = await SubCategory.findById({ _id: req.body._id })
-        if (!subCategory) {
-            return res.status(400).send({ 'error': 'Sous-catégorie inexistante' })
-        }
-        return res.send(subCategory)
-    } catch (error) {
-        res.status(500).send()
-    }
-})
 router.get('/allSubCategory', auth, async (req, res) => {
     try {
-        const subCategories = await SubCategory.findById({})
+        const subCategories = await SubCategory.find({})
         if (!subCategories) {
             return res.status(400).send({ 'error': 'Sous-catégorie inexistante' })
         }

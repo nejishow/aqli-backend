@@ -7,6 +7,10 @@ const subCategorySchema = new mongoose.Schema({
     idCategory: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
+    },
+    enabled: {
+        type: Boolean,
+        required: true
     }
 
 })

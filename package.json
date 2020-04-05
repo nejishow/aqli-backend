@@ -14,11 +14,12 @@
   "author": "ashraf",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^4.6.0",
+    "@google-cloud/storage": "^4.7.0",
     "bcrypt": "^4.0.1",
     "cors": "^2.8.5",
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
+    "firebase": "^7.13.2",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.4",

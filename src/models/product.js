@@ -17,27 +17,47 @@ const productSchema = new mongoose.Schema({
     },
 
     pics: [{
-        pic: {
+        src: {
             type: String,
             required: true
         }
     }],
-    colors: [{
+   attributes: [{
+    Couleurs: [{
         color: {
             type: String,
         }
     }],
-    sizes: [{
+    Tailles: [{
         size: {
             type: String,
         }
     }],
+    Stockages: [{
+        stockage: {
+            type: String,
+        }
+    }],
+    
+   }],
     description: {
         type: String,
         required: true
     },
-    idProductType: {
-        type: mongoose.Schema.Types.ObjectId,
+    idProductTypes: [{
+        idProductType: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
+        }
+    }],
+    keywords: [{
+        keyword: {
+            type: String,
+            required: true
+        }
+    }],
+    enabled: {
+        type: Boolean,
         required: true
     }
 

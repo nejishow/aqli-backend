@@ -6,7 +6,14 @@ const productTypeSchema = new mongoose.Schema({
     },
     idSubCategory: {
         type: mongoose.Schema.Types.ObjectId,
-        required:true
+        required: true
+    },
+    pic: {
+        type: String
+    },
+    enabled: {
+        type: Boolean,
+        required: true
     }
 
 })
