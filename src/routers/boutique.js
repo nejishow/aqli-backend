@@ -7,25 +7,52 @@ const auth = require('../middleware/auth')
 router.post('/boutique', async (req, res) => {
     const boutique = new Boutique(req.body)
     try {
-        const token = await boutique.generateToken()
-        return res.status(200).send({boutique, token})
+        await boutique.save()
+        return res.status(200).send( boutique )
     } catch (error) {
         res.status(400).send(error)
     }
 })
-router.get('/boutique/me',auth, async (req, res) => {    
-   res.status(201).send(req.boutique)
-})
+router.get('/boutique/:id', auth, async (req, res) => {  
+    try {
+        const boutique = await Boutique.findById({ _id: req.params.id })
+        if (!boutique) {
+            return res.status(404).send({'error':'Pas de boutique'})
+        }
+        res.status(201).send(boutique)
 
-router.patch('/boutique/me',auth, async (req, res) => {
+    } catch (error) {
+        res.status(400).send({})
+
+    }
+})
+router.get('/allBoutique', auth, async (req, res) => {
+    try {
+        const boutiques = await Boutique.find({})
+        if (!boutiques) {
+            return res.status(404).send({ 'error': 'Pas de boutiques' })
+        }
+        res.status(201).send(boutiques)
+
+    } catch (error) {
+        res.status(400).send({})
+
+    }})
+
+router.patch('/boutique/:id',auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdate = ['name', 'email', 'password'];
+    console.log(updates);
+    
+    const allowedUpdate = ['name', 'email', 'address','proprio','number'];
     const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
     if (!isValidOperation) {
         return res.status(400).send({ 'error': 'Modifications invalides' })
     }
     try {
-        const boutique = req.boutique
+        const boutique = await Boutique.findById({ _id: req.params.id })
+        if (!boutique) {
+            return res.status(404).send({ 'error': 'Pas de boutique' })
+        }
         updates.forEach((update) => boutique[update] = req.body[update])
         await boutique.save()
         return res.send(boutique)
@@ -34,10 +61,14 @@ router.patch('/boutique/me',auth, async (req, res) => {
     }
 })
 
-router.delete('/boutique/me',auth,async(req,res)=>{
-    try {
-        await req.boutique.remove() //delete a boutique it's like save()
-        res.send(req.boutique)
+router.delete('/boutique/:id',auth,async(req,res)=>{
+    try {        
+        const boutique = await Boutique.findById({ _id: req.params.id })
+        if (!boutique) {
+            return res.status(404).send({ 'error': 'Pas de boutique à supprimer' })
+        }
+        await boutique.remove() //delete a boutique it's like save()
+        res.send(boutique)
 
     } catch (error) {
         res.status(500).send()
@@ -45,45 +76,6 @@ router.delete('/boutique/me',auth,async(req,res)=>{
 
 })
 
-router.post('/getboutique', async (req, res) => {
-    const id = req.body.boutiqueId
-    try {
-        const boutique = await boutique.find({ _id: id })
-        res.status(201).send(boutique)
-    } catch (error) {
-        res.status(404).send(error)
 
-    }
-})
-
-router.post('/boutique/login', async (req, res)=>{
-    try {
-        const boutique = await boutique.findByCredentials(req.body.email,req.body.password);
-        const token = await boutique.generateToken()        
-        return res.send({boutique,token})
-    } catch (e) {
-        res.status(400).send({'error': 'Cet utilisateur n\'existe pas'})
-    }
-})
-router.post('/boutique/logout',auth, async (req, res)=>{
-    try {
-        req.boutique.tokens = req.boutique.tokens.filter((token)=> {return token.token !== req.token} )
-        await req.boutique.save()
-        res.send()
-    } catch (error) {
-        res.status(500).send({error})
-
-    }
-})
-router.post('/boutique/logoutAll',auth, async (req, res)=>{
-    try {
-        req.boutique.tokens = []
-        await req.boutique.save()
-        res.send()
-    } catch (error) {
-        res.status(500).send({error})
-
-    }
-})
 
 module.exports = router

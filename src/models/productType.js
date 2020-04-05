@@ -8,8 +8,9 @@ const productTypeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    pic: {
-        type: String
+    src: {
+        type: String,
+        required: true
     },
     enabled: {
         type: Boolean,

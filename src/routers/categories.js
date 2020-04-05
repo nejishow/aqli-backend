@@ -128,7 +128,7 @@ router.delete('/productType', auth, async (req, res) => {
 //get
 
 
-router.get('/allProductType', auth, async (req, res) => {
+router.get('/allProductType', async (req, res) => {
     try {
         const productTypes = await ProductType.find({})
         if (!productTypes) {
@@ -139,8 +139,19 @@ router.get('/allProductType', auth, async (req, res) => {
         res.status(500).send()
     }
 })
+router.get('/productType/:id', async (req, res) => {    
+    try {
+        const productTypes = await ProductType.find({idSubCategory:req.params.id})
+        if (!productTypes) {
+            return res.status(400).send({ 'error': 'Type de produit inexistant' })
+        }
+        return res.send(productTypes)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
 
-router.get('/allCategory', auth, async (req, res) => {
+router.get('/allCategory', async (req, res) => {
     try {
         const categories = await Category.find({})
         if (!categories) {
@@ -152,7 +163,7 @@ router.get('/allCategory', auth, async (req, res) => {
     }
 })
 
-router.get('/allSubCategory', auth, async (req, res) => {
+router.get('/allSubCategory', async (req, res) => {
     try {
         const subCategories = await SubCategory.find({})
         if (!subCategories) {
@@ -161,18 +172,6 @@ router.get('/allSubCategory', auth, async (req, res) => {
         return res.send(subCategories)
     } catch (error) {
         res.status(500).send()
-    }
-})
-
-
-router.post('/getcategory', async (req, res) => {
-    const id = req.body.categoryId
-    try {
-        const category = await category.find({ _id: id })
-        res.status(201).send(category)
-    } catch (error) {
-        res.status(404).send(error)
-
     }
 })
 

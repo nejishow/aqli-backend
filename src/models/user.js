@@ -76,8 +76,8 @@ userSchema.methods.generateToken = async function () {
         user.tokens =  user.tokens.concat({token})
         await user.save()
         return  token
-    } catch (error) {
-        console.log(error);
+    } catch (e) {
+        throw new Error('Probleme de creation d\'utilisateur')
     }
 }
 

@@ -22,24 +22,27 @@ const productSchema = new mongoose.Schema({
             required: true
         }
     }],
-   attributes: [{
-    Couleurs: [{
-        color: {
-            type: String,
-        }
-    }],
-    Tailles: [{
-        size: {
-            type: String,
-        }
-    }],
-    Stockages: [{
-        stockage: {
-            type: String,
-        }
-    }],
+    attributes: [{
+        Couleurs: [{
+            color: {
+                type: String,
+            }
+        }]
+    }, {
+            Tailles: [{
+                size: {
+                    type: String,
+                }
+            }]
+        }, {
+            Stockages: [{
+                stockage: {
+                    type: String,
+                }
+            }]
+        },
     
-   }],
+   ],
     description: {
         type: String,
         required: true
