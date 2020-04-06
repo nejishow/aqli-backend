@@ -174,6 +174,17 @@ router.get('/allSubCategory', async (req, res) => {
         res.status(500).send()
     }
 })
+router.get('/subCategory/:id', async (req, res) => {
+    try {
+        const subCategories = await SubCategory.find({idCategory:req.params.id})
+        if (!subCategories) {
+            return res.status(404).send({ 'error': 'Sous-catégorie inexistante' })
+        }
+        return res.send(subCategories)
+    } catch (error) {
+        return res.status(500).send()
+    }
+})
 
 
 module.exports = router
