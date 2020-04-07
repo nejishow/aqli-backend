@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const validator = require('validator')
+
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -27,24 +29,32 @@ const productSchema = new mongoose.Schema({
             color: {
                 type: String,
             }
+        }],
+        Tailles: [{
+            size: {
+                type: Number,
+                validate(value) {
+                    if (!validator.isNumeric) {
+                        throw new Error('Ecrivez un nombre pour la taille')
+                    }
+                }
+            }
+        }],
+        Stockages: [{
+            stockage: {
+                type: Number,
+                validate(value) {
+                    if (!validator.isNumeric) {
+                        throw new Error('Ecrivez un nombre pour le stockage')
+                    }
+                }
+            }
         }]
-    }, {
-            Tailles: [{
-                size: {
-                    type: String,
-                }
-            }]
-        }, {
-            Stockages: [{
-                stockage: {
-                    type: String,
-                }
-            }]
-        },
-    
-   ],
+    },
+
+    ],
     description: {
-        type: String,
+        type: Array,
         required: true
     },
     idProductTypes: [{

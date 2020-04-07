@@ -4,7 +4,7 @@ const Product = require("../models/product")
 const multer = require('multer')
 const auth = require('../middleware/auth')
 
-router.post('/product', auth, async (req, res) => {
+router.post('/product', auth, async (req, res) => {    
     const product = new Product(req.body)
     try {
         await product.save()
@@ -16,6 +16,17 @@ router.post('/product', auth, async (req, res) => {
 router.get('/products/:idProductType', async (req, res) => {
     try {
         const products = await Product.find({ idProductType })
+        if (!products) {
+            return res.send(400).send({ 'error': 'Pas de produits' })
+        }
+        res.status(201).send(products)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+router.get('/product/:id', async (req, res) => {
+    try {
+        const products = await Product.findById({ _id:req.params.id })
         if (!products) {
             return res.send(400).send({ 'error': 'Pas de produits' })
         }
