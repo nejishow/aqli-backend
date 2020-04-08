@@ -56,22 +56,22 @@ router.post('/getuser', async (req, res) => {
     }
 })
 
-router.post('/users/login', async (req, res)=>{
+router.post('/users/login', async (req, res) => {    
     try {
-        const user = await User.findByCredentials(req.body.email,req.body.password);
+        const user = await User.findByCredentials(req.body.params.email,req.body.params.password);
         const token = await user.generateToken()        
         return res.send({user,token})
     } catch (e) {
-        res.status(400).send({'error': 'Cet utilisateur n\'existe pas'})
+        res.status(404).send('Email ou mot de passe erroné')
     }
 })
-router.post('/users/logout',auth, async (req, res)=>{
+router.post('/users/logout', auth, async (req, res) => {    
     try {
         req.user.tokens = req.user.tokens.filter((token)=> {return token.token !== req.token} )
         await req.user.save()
         res.send()
     } catch (error) {
-        res.status(500).send({error})
+        res.status(500).send(error)
 
     }
 })
