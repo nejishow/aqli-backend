@@ -53,8 +53,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required:true
     }
+},
+{timestamp: true})
 
-})
 // verify credentials, this a function we use on User and not on user
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })

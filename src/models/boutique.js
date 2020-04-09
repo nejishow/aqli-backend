@@ -42,8 +42,8 @@ const boutiqueSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     }
-
-})
+},
+{timestamp: true})
 
 
 const boutique = mongoose.model('Boutique', boutiqueSchema)

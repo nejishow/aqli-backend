@@ -12,10 +12,8 @@ const subCategorySchema = new mongoose.Schema({
         type: Boolean,
         required: true
     }
-
-})
-
-
+},
+{timestamp: true})
 
 
 const subCategory = mongoose.model('SubCategory', subCategorySchema)

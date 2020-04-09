@@ -8,10 +8,8 @@ const categorySchema = new mongoose.Schema({
         type: Boolean,
         required: true
     }
-
-})
-
-
+},
+{timestamp: true})
 
 
 const category = mongoose.model('Category', categorySchema)

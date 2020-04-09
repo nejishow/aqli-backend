@@ -1,10 +1,11 @@
 const express = require("express")
 const router = new express.Router()
 const Product = require("../models/product")
+const Favoris = require('../models/favoris')
 const multer = require('multer')
 const auth = require('../middleware/auth')
 
-router.post('/product', auth, async (req, res) => {    
+router.post('/product', auth, async (req, res) => {
     const product = new Product(req.body)
     try {
         await product.save()
@@ -13,6 +14,8 @@ router.post('/product', auth, async (req, res) => {
         res.status(400).send(error)
     }
 })
+
+
 router.get('/products/:idProductType', async (req, res) => {
     try {
         const products = await Product.find({ 'idProductTypes.idProductType': req.params.idProductType })
@@ -26,7 +29,7 @@ router.get('/products/:idProductType', async (req, res) => {
 })
 router.get('/product/:id', async (req, res) => {
     try {
-        const products = await Product.findById({ _id:req.params.id })
+        const products = await Product.findById({ _id: req.params.id })
         if (!products) {
             return res.send(400).send({ 'error': 'Pas de produits' })
         }
@@ -44,7 +47,7 @@ router.patch('/product', auth, async (req, res) => {
         return res.status(400).send({ 'error': 'Modifications invalides' })
     }
     try {
-        const product = await Product.findById({_id:req.body._id})
+        const product = await Product.findById({ _id: req.body._id })
         updates.forEach((update) => product[update] = req.body[update])
         await product.save()
         return res.send(product)
@@ -55,9 +58,9 @@ router.patch('/product', auth, async (req, res) => {
 
 router.delete('/product', auth, async (req, res) => {
     try {
-        const product = await Product.findById({_id:req.body._id})
+        const product = await Product.findById({ _id: req.body._id })
         await product.remove() //delete a product it's like save()
-        res.send({'message':'Le produit a bien eté supprimé'})
+        res.send({ 'message': 'Le produit a bien eté supprimé' })
 
     } catch (error) {
         res.status(500).send()
@@ -76,5 +79,48 @@ router.post('/getproduct', async (req, res) => {
     }
 })
 
+
+router.get('/likeProduct', auth, async (req, res) => {
+    try {
+        const favori = await Favoris.findOne({ idUser: req.user._id, idProduct: req.body.params.idProduct })
+        if (favori) {
+            return res.status(200).send(favori)
+        }
+        else {
+            return res.status(200).send()
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+router.get('/allLikeProduct', async (req, res) => {
+    console.log(req.body);
+    
+    const favori = await Favoris.findOne({ idProduct: req.body.params.idProduct })
+    if (favori) {
+        return res.status(200).send(favori)
+    }
+    else {
+        return res.status(200).send()
+    }
+
+})
+router.post('/likeProduct', auth, async (req, res) => {
+    try {
+        const favori = await Favoris.findOne({ idUser: req.body.params.idUser, idProduct: req.body.params.idProduct })
+        if (favori) {
+            favori.enabled = !favori.enabled
+            await favori.save()
+            return res.status(201).send(favori)
+
+        } else {
+            const newFavori = await Favoris(req.body.params)
+            await newFavori.save()
+            return res.status(200).send(newFavori)
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
 
 module.exports = router

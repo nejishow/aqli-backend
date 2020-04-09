@@ -72,50 +72,19 @@ const productSchema = new mongoose.Schema({
     enabled: {
         type: Boolean,
         required: true
+    },
+    inStock: {
+        type: Boolean,
+        required: true
+    },
+    serialNumber: {
+        type: Number,
+        required: true
     }
-
-})
+},
+{timestamp: true})
 // verify credentials, this a function we use on product and not on product
-productSchema.statics.findByCredentials = async (email, password) => {
-    const product = await product.findOne({ email })
-    if (!product) {
-        throw new Error('Connexion refusée')
-    }
-    const isMatch = await bcrypt.compare(password, product.password)
-    if (!isMatch) {
-        throw new Error('Connexion refusée')
-    }
-    return product
-}
 
-
-productSchema.methods.generateToken = async function () {
-    const product = this
-    try {
-        const token = jwt.sign({ _id: product._id.toString() }, 'laIlaahaIlaAllah', { expiresIn: '2 days' })
-        product.tokens = product.tokens.concat({ token })
-        await product.save()
-        return token
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-productSchema.methods.toJSON = function () {
-    const product = this
-    const productObject = product.toObject()
-    delete productObject.password
-    delete productObject.tokens
-    return productObject
-}
-// hash the plain text password
-productSchema.pre('save', async function (next) {
-    const product = this;
-    if (product.isModified('password')) {
-        product.password = await bcrypt.hash(product.password, 8)
-    }
-    next()
-});
 const product = mongoose.model('Product', productSchema)
 
 module.exports = product
