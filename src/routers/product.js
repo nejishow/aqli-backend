@@ -2,7 +2,6 @@ const express = require("express")
 const router = new express.Router()
 const Product = require("../models/product")
 const Favoris = require('../models/favoris')
-const multer = require('multer')
 const auth = require('../middleware/auth')
 
 router.post('/product', auth, async (req, res) => {
@@ -80,9 +79,9 @@ router.post('/getproduct', async (req, res) => {
 })
 
 
-router.get('/likeProduct', auth, async (req, res) => {
+router.get('/likeProduct/:id', auth, async (req, res) => {
     try {
-        const favori = await Favoris.findOne({ idUser: req.user._id, idProduct: req.body.params.idProduct })
+        const favori = await Favoris.findOne({ idUser: req.user._id, idProduct: req.params.id })
         if (favori) {
             return res.status(200).send(favori)
         }
@@ -93,21 +92,21 @@ router.get('/likeProduct', auth, async (req, res) => {
         res.status(400).send(error)
     }
 })
-router.get('/allLikeProduct', async (req, res) => {
-    console.log(req.body);
-    
-    const favori = await Favoris.findOne({ idProduct: req.body.params.idProduct })
-    if (favori) {
-        return res.status(200).send(favori)
-    }
-    else {
-        return res.status(200).send()
+router.get('/allLikeProduct/:id', async (req, res) => {   
+    try {
+        const favori = await Favoris.find({ idProduct: req.params.id, enabled: true })
+        if (!favori) {
+            throw new Error ('pas de favori')
+        }
+            return res.status(200).send(favori)
+    } catch (error) {
+        return res.status(404).send(error)
     }
 
 })
-router.post('/likeProduct', auth, async (req, res) => {
+router.post('/likeProduct/:id', auth, async (req, res) => {
     try {
-        const favori = await Favoris.findOne({ idUser: req.body.params.idUser, idProduct: req.body.params.idProduct })
+        const favori = await Favoris.findOne({ idUser: req.user._id, idProduct: req.params.id })
         if (favori) {
             favori.enabled = !favori.enabled
             await favori.save()

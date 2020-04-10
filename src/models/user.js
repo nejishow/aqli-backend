@@ -6,11 +6,15 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-
+    },
+    address: {
+        type: String
+    },
+    number: {
+        type: Number
     },
     birthDate: {
         type: Date,
-        required: true
     },
     email: {
         type: String,
@@ -41,7 +45,6 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        required: true
     },
     tokens: [{
         token: {

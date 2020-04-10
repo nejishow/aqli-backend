@@ -69,6 +69,9 @@ const productSchema = new mongoose.Schema({
             required: true
         }
     }],
+    garantit: {
+        type: String
+    },
     enabled: {
         type: Boolean,
         required: true
@@ -77,7 +80,7 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    serialNumber: {
+    serial: {
         type: Number,
         required: true
     }
