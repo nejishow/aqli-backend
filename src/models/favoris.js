@@ -12,6 +12,15 @@ const favorisSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
+    name: {
+        type: String,
+        required: true
+    },
+    src: {
+        type: String,
+        required: true
+    },
+
 },{
     timestamps: true
 })

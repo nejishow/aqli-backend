@@ -151,7 +151,7 @@ router.get('/productType/:id', async (req, res) => {
     }
 })
 
-router.get('/allCategory', async (req, res) => {
+router.get('/allCategory', async (req, res) => {    
     try {
         const categories = await Category.find({})
         if (!categories) {

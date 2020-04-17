@@ -16,7 +16,7 @@ const avatarSchema = new mongoose.Schema({
         type: Boolean,
     }
 },
-{timestamp: true})
+{timestamps: true})
 // verify credentials, this a function we use on avatar and not on avatar
 
 const avatar = mongoose.model('Avatar', avatarSchema)

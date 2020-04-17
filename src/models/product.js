@@ -85,7 +85,7 @@ const productSchema = new mongoose.Schema({
         required: true
     }
 },
-{timestamp: true})
+{timestamps: true})
 // verify credentials, this a function we use on product and not on product
 
 const product = mongoose.model('Product', productSchema)

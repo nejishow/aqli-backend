@@ -44,7 +44,7 @@ const panierSchema = new mongoose.Schema({
         required: true
     }
 },
-    { timestamp: true })
+    { timestamps: true })
 
 const Panier = mongoose.model('Panier', panierSchema)
 

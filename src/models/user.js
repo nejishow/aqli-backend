@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
         required:true
     }
 },
-{timestamp: true})
+{timestamps: true})
 
 // verify credentials, this a function we use on User and not on user
 userSchema.statics.findByCredentials = async (email, password) => {

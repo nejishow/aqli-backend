@@ -7,11 +7,12 @@ const categoriesRouter = require("./routers/categories")
 const boutiqueRouter = require("./routers/boutique")
 const productRouter = require("./routers/product")
 const panierRouter = require("./routers/panier")
+const commandRouter = require("./routers/command")
 
 const app = express()
 const port = process.env.PORT || 3000
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Origin", "http://192.168.137.111:8080");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization,  Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET, PATCH, DELETE, POST");
   next();
@@ -26,6 +27,7 @@ app.use(categoriesRouter)
 app.use(productRouter)
 app.use(boutiqueRouter)
 app.use(panierRouter)
+app.use(commandRouter)
 
 app.listen(port, () => {
   console.log('Server is up on port ' + port);

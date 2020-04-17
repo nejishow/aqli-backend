@@ -79,7 +79,7 @@ router.post('/getproduct', async (req, res) => {
 })
 
 
-router.get('/likeProduct/:id', auth, async (req, res) => {
+router.get('/likeProduct/:id', auth, async (req, res) => {  // check if the product was liked by the user
     try {
         const favori = await Favoris.findOne({ idUser: req.user._id, idProduct: req.params.id })
         if (favori) {
@@ -92,7 +92,7 @@ router.get('/likeProduct/:id', auth, async (req, res) => {
         res.status(400).send(error)
     }
 })
-router.get('/allLikeProduct/:id', async (req, res) => {   
+router.get('/allLikeProduct/:id', async (req, res) => {   // how many time the product was liked
     try {
         const favori = await Favoris.find({ idProduct: req.params.id, enabled: true })
         if (!favori) {
@@ -104,7 +104,20 @@ router.get('/allLikeProduct/:id', async (req, res) => {
     }
 
 })
-router.post('/likeProduct/:id', auth, async (req, res) => {
+router.get('/allLikeProduct',auth, async (req, res) => {   // all the product liked by the user
+    try {
+        const favoris = await Favoris.find({ idUser: req.user._id, enabled: true })
+        if (!favoris) {
+            throw new Error('pas de favori')
+        }
+        return res.status(200).send(favoris)
+    } catch (error) {
+        return res.status(404).send(error)
+    }
+
+})
+router.post('/likeProduct/:id', auth, async (req, res) => { // like the product
+
     try {
         const favori = await Favoris.findOne({ idUser: req.user._id, idProduct: req.params.id })
         if (favori) {
@@ -113,7 +126,7 @@ router.post('/likeProduct/:id', auth, async (req, res) => {
             return res.status(201).send(favori)
 
         } else {
-            const newFavori = await Favoris(req.body.params)
+            const newFavori = await Favoris({idUser:req.user._id,idProduct:req.params.id,name:req.body.params.name,src:req.body.params.pics[0].src})
             await newFavori.save()
             return res.status(200).send(newFavori)
         }

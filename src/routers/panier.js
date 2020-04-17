@@ -29,7 +29,25 @@ router.get('/panier', auth, async (req, res) => {
     }
 })
 
-
+router.patch('/panier/:id', auth, async (req, res) => {
+    const updates = Object.keys(req.body.params)
+    const allowedUpdate = ['quantity'];
+    const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
+    if (!isValidOperation) {
+        return res.status(400).send({ 'error': 'Modifications invalides' })
+    }
+    try {        
+        const panier = await Panier.findById({ _id: req.params.id})
+        if (!panier) {
+            return res.status(400).send({error:'Produit inexistant'})
+        }
+        panier.quantity = req.body.params.quantity
+        await panier.save()
+        return res.send(panier)
+    } catch (error) {
+        res.status(404).send(error)
+    }
+})
 router.delete('/panier/:id', auth, async (req, res) => {
     try {
         const panier = await Panier.findById({ _id: req.params.id })

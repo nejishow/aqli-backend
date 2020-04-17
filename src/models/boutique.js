@@ -43,7 +43,7 @@ const boutiqueSchema = new mongoose.Schema({
         required: true
     }
 },
-{timestamp: true})
+{timestamps: true})
 
 
 const boutique = mongoose.model('Boutique', boutiqueSchema)
