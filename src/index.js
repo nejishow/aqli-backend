@@ -12,7 +12,7 @@ const commandRouter = require("./routers/command")
 const app = express()
 const port = process.env.PORT || 3000
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://192.168.137.111:8080");
+  res.header("Access-Control-Allow-Origin", "practical-mcnulty-9efd03.netlify.app");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization,  Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET, PATCH, DELETE, POST");
   next();
