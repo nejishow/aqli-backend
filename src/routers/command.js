@@ -23,7 +23,7 @@ router.post('/command', auth, async (req, res) => { // post a command
             .create({
                 body: 'Aqli commande: ' + sms + ' pour un total de : ' + command.total + 'fdj. Aqli à votre service.',
                 from: '+12268060224',
-                to: '+25377484707'
+                to: '+253'+req.user.number
             })
         return res.status(200).send(command)
     } catch (error) {
@@ -32,7 +32,7 @@ router.post('/command', auth, async (req, res) => { // post a command
 })
 
 
-router.get('/commands', auth, async (req, res) => {  // get all enabled command
+router.get('/commands', auth, async (req, res) => {  // get all enabled command for the users
     try {
         const commands = await Command.find({ idUser: req.user._id, enabled: true })
         if (!commands) {
@@ -43,7 +43,51 @@ router.get('/commands', auth, async (req, res) => {  // get all enabled command
         res.status(500).send()
     }
 })
-router.get('/command/:id', auth, async (req, res) => {    
+router.get('/adminCommands', auth, async (req, res) => {  // get all command for the admin
+    try {
+        const commands = await Command.find({})
+        if (!commands) {
+            return res.send(400).send({ 'error': 'command vide' })
+        }
+        res.status(201).send(commands)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+router.get('/newCommand', auth, async (req, res) => {  // get all new command for the admin
+    try {
+        const commands = await Command.find({received: false})
+        if (!commands) {
+            return res.send(400).send({ 'error': 'command vide' })
+        }
+        res.status(201).send(commands)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+router.get('/completedCommand', auth, async (req, res) => {  // get all completed command for the admin
+    try {
+        const commands = await Command.find({ received: true })
+        if (!commands) {
+            return res.send(400).send({ 'error': 'command vide' })
+        }
+        res.status(201).send(commands)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+router.get('/cancelledCommand', auth, async (req, res) => {  // get all cancelled command for the admin
+    try {
+        const commands = await Command.find({ enabled: false })
+        if (!commands) {
+            return res.send(400).send({ 'error': 'command vide' })
+        }
+        res.status(201).send(commands)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+router.get('/command/:id', auth, async (req, res) => {    // get a command for anyone
     try {
         const command = await Command.findById({ _id: req.params.id })
         if (!command) {
@@ -55,14 +99,20 @@ router.get('/command/:id', auth, async (req, res) => {
     }
 })
 
-router.patch('/command/:id', auth, async (req, res) => {
+router.patch('/command/:id', auth, async (req, res) => { // confirmer reception
     try {
-        const command = await Command.findById({ _id: req.params.id })
+        const command = await Command.find({ _id: req.params.id, code: req.body.params.code })
         if (!command) {
             return res.status(400).send({ error: 'Produit inexistant' })
         }
         command.received = true
         await command.save()
+        client.messages
+            .create({
+                body: 'Commande receptionnée. Aqli vous remercit :D ',
+                from: '+12268060224',
+                to: '+25377484707'
+            })
         return res.send(command)
     } catch (error) {
         res.status(404).send(error)
@@ -144,10 +194,12 @@ router.post('/commandItem/:id', auth, async (req, res) => { // annuler un articl
         if (!command) {
             return res.status(404).send('pas de produit')
         }
-        await command.commands.forEach((command) => {
+        await command.commands.forEach((one) => {
             
-            if (command._id == req.params.id) {
-                command.enabled = false                
+            if (one._id == req.params.id) {
+                one.enabled = false
+                command.total -= (one.price * one.quantity)
+                command.updatedAt = new Date()
             }
         });
         let i = 0

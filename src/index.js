@@ -8,11 +8,12 @@ const boutiqueRouter = require("./routers/boutique")
 const productRouter = require("./routers/product")
 const panierRouter = require("./routers/panier")
 const commandRouter = require("./routers/command")
+const addressRouter = require("./routers/address")
 
 const app = express()
 const port = process.env.PORT || 3000
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "practical-mcnulty-9efd03.netlify.app");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization,  Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET, PATCH, DELETE, POST");
   next();
@@ -28,6 +29,7 @@ app.use(productRouter)
 app.use(boutiqueRouter)
 app.use(panierRouter)
 app.use(commandRouter)
+app.use(addressRouter)
 
 app.listen(port, () => {
   console.log('Server is up on port ' + port);

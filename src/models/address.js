@@ -5,9 +5,13 @@ const addressSchema = new mongoose.Schema({
         required: true,
 
     },
-    point: [{
+    points: [{
         point: {
             type:String
+        },
+        enabled: {
+            type: Boolean,
+            default: true
         }
     }],
     enabled: {
@@ -20,11 +24,10 @@ const addressSchema = new mongoose.Schema({
 addressSchema.methods.addPoint = async function (points) {
     const address = this
     try {
-        await points.forEach(point => {
-            address.points = address.points.concat({ point })
+        await points.forEach(point => {            
+            address.points = address.points.concat({ point: point.point })
         });
         await address.save()
-        return address
     } catch (e) {
         throw new Error('Probleme d\'ajout de point de livraison')
     }

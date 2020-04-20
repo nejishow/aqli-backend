@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
         type: Number
     },
     birthDate: {
-        type: Date,
+        type: String,
     },
     email: {
         type: String,
@@ -55,6 +55,10 @@ const userSchema = new mongoose.Schema({
     enabled: {
         type: Boolean,
         required:true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 },
 {timestamps: true})
@@ -67,6 +71,22 @@ userSchema.statics.findByCredentials = async (email, password) => {
     }
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
+        throw new Error('Connexion refusée')
+    }
+    return user
+}
+
+userSchema.statics.isAdmin = async (email, password) => {
+    const user = await User.findOne({ email })
+    if (!user) {
+        throw new Error('Connexion refusée')
+    }
+    console.log(user)
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+        throw new Error('Connexion refusée')
+    }
+    if (!user.isAdmin) {
         throw new Error('Connexion refusée')
     }
     return user

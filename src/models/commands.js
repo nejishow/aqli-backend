@@ -33,7 +33,11 @@ const commandSchema = new mongoose.Schema({
         enabled: {
             type: Boolean,
             default: true
-        }
+        },
+        price: {
+            type: Number,
+            required: true
+        },
     }],
     total: {
         type: Number,
@@ -42,6 +46,10 @@ const commandSchema = new mongoose.Schema({
     received: {
         type: Boolean,
         default: false
+    },
+    commission: {
+        type: Number,
+        default: 500
     },
     enabled: {
         type: Boolean,

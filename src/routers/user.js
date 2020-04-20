@@ -17,20 +17,20 @@ router.get('/users/me',auth, async (req, res) => {
    res.status(201).send(req.user)
 })
 
-router.patch('/users/me',auth, async (req, res) => {
-    const updates = Object.keys(req.body.params)
-    const allowedUpdate = ['name', 'email', 'password', 'birthDate', 'gender', 'avatar'];
-    const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
-    if (!isValidOperation) {
-        return res.status(400).send({ 'error': 'Modifications invalides' })
-    }
+router.patch('/users/me', auth, async (req, res) => {
+    console.log(req.body.params);
     try {
         const user = req.user
-        updates.forEach((update) => user[update] = req.body[update])
+        user.name = req.body.params.name
+        user.birthDate = req.body.params.birthDate
+        user.gender = req.body.params.gender
+        user.email = req.body.params.email
+        user.number = req.body.params.number
+        user.address = req.body.params.address
         await user.save()
         return res.send(user)
     } catch (error) {
-        res.status(404).send(error)
+        res.status(500).send(error)
     }
 })
 
@@ -85,5 +85,42 @@ router.post('/users/logoutAll',auth, async (req, res)=>{
 
     }
 })
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+router.get('/users/:id', auth, async (req, res) => {  // get one user
+    try {
+        const user = await User.findById({ _id: req.params.id })
+        if (!user) {
+            return res.status(404).send('Utilisateur inexistant')
+        }
+        res.status(200).send(user)
+    } catch (error) {
+        res.status(500).send('Problem de serveur')
+    }
+})
+router.get('/allUsers', auth, async (req, res) => {  // get All user
+    try {
+        const users = await User.find({})
+        if (!users) {
+            return res.status(404).send('Pas de clients pour le moment')
+        }
+        res.status(200).send(users)
+    } catch (error) {
+        res.status(500).send('Problem de serveur')
+    }
+})
+    
+router.post('/logInAdmin', async (req, res) => {
+    console.log(req.body.params)
+    
+    try {
+        const user = await User.isAdmin(req.body.params.email, req.body.params.password);
+        const token = await user.generateToken()        
+        return res.send({ user, token })
+    } catch (e) {
+        res.status(404).send('Email ou mot de passe erroné')
+    }
+})
 module.exports = router
