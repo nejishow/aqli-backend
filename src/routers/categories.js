@@ -150,6 +150,17 @@ router.get('/productType/:id', async (req, res) => {
         res.status(500).send()
     }
 })
+router.get('/allProductType', async (req, res) => {
+    try {
+        const productTypes = await ProductType.find({})
+        if (!productTypes) {
+            return res.status(400).send({ 'error': 'Type de produit inexistant' })
+        }
+        return res.send(productTypes)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
 
 router.get('/allCategory', async (req, res) => {    
     try {
