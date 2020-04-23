@@ -54,6 +54,10 @@ const commandSchema = new mongoose.Schema({
     enabled: {
         type: Boolean,
         default: true
+    },
+    password: {
+        type: String,
+        required: true
     }
 },
     { timestamps: true })

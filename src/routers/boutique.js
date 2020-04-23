@@ -40,9 +40,7 @@ router.get('/allBoutique', auth, async (req, res) => {
     }})
 
 router.patch('/boutique/:id',auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    console.log(updates);
-    
+    const updates = Object.keys(req.body)    
     const allowedUpdate = ['name', 'email', 'address','proprio','number'];
     const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
     if (!isValidOperation) {

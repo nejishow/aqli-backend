@@ -81,7 +81,6 @@ userSchema.statics.isAdmin = async (email, password) => {
     if (!user) {
         throw new Error('Connexion refusée')
     }
-    console.log(user)
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
         throw new Error('Connexion refusée')

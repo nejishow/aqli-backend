@@ -18,7 +18,6 @@ router.get('/users/me',auth, async (req, res) => {
 })
 
 router.patch('/users/me', auth, async (req, res) => {
-    console.log(req.body.params);
     try {
         const user = req.user
         user.name = req.body.params.name
@@ -112,9 +111,7 @@ router.get('/allUsers', auth, async (req, res) => {  // get All user
     }
 })
     
-router.post('/logInAdmin', async (req, res) => {
-    console.log(req.body.params)
-    
+router.post('/logInAdmin', async (req, res) => {    
     try {
         const user = await User.isAdmin(req.body.params.email, req.body.params.password);
         const token = await user.generateToken()        

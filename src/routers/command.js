@@ -5,6 +5,8 @@ const auth = require('../middleware/auth')
 const accountSid = 'ACe70a130659cb6ac4e507aa1424b3c7b3';
 const authToken = '64a35b62640421c1207f43596d0d6454';
 const client = require('twilio')(accountSid, authToken);
+const generator = require('generate-password');
+
 
 router.post('/command', auth, async (req, res) => { // post a command    
     const command = await new Command({
@@ -18,10 +20,15 @@ router.post('/command', auth, async (req, res) => { // post a command
         ) 
     });
     try {
+        var password = generator.generate({
+            length: 10,
+            numbers: true
+        });
+        command.password = password
         await command.save()
         client.messages
             .create({
-                body: 'Aqli commande: ' + sms + ' pour un total de : ' + command.total + 'fdj. Aqli à votre service.',
+                body: 'Aqli commande: ' + sms + ' pour un total de : ' + command.total + 'fdj. Aqli à votre service. Code: '+ password,
                 from: '+12268060224',
                 to: '+253'+req.user.number
             })
@@ -78,7 +85,7 @@ router.get('/completedCommand', auth, async (req, res) => {  // get all complete
 })
 router.get('/cancelledCommand', auth, async (req, res) => {  // get all cancelled command for the admin
     try {
-        const commands = await Command.find({ enabled: false })
+        const commands = await Command.find({ enabled: false, received: false })
         if (!commands) {
             return res.send(400).send({ 'error': 'command vide' })
         }
@@ -219,6 +226,7 @@ router.post('/commandItem/:id', auth, async (req, res) => { // annuler un articl
                 })
         } else {
             command.enabled = false
+            command.total = 0
             client.messages
                 .create({
                     body: 'ID: ' + req.user._id + ' vient d\'annuler toute une commande',
