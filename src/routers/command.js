@@ -63,7 +63,7 @@ router.get('/adminCommands', auth, async (req, res) => {  // get all command for
 })
 router.get('/newCommand', auth, async (req, res) => {  // get all new command for the admin
     try {
-        const commands = await Command.find({received: false})
+        const commands = await Command.find({received: false, enabled: true})
         if (!commands) {
             return res.send(400).send({ 'error': 'command vide' })
         }
@@ -107,22 +107,17 @@ router.get('/command/:id', auth, async (req, res) => {    // get a command for a
 })
 
 router.patch('/command/:id', auth, async (req, res) => { // confirmer reception
+    console.log(req.params.id)    
     try {
-        const command = await Command.find({ _id: req.params.id, code: req.body.params.code })
+        const command = await Command.findOne({ _id: req.params.id, password: req.body.params })
         if (!command) {
             return res.status(400).send({ error: 'Produit inexistant' })
         }
         command.received = true
         await command.save()
-        client.messages
-            .create({
-                body: 'Commande receptionnée. Aqli vous remercit :D ',
-                from: '+12268060224',
-                to: '+25377484707'
-            })
         return res.send(command)
     } catch (error) {
-        res.status(404).send(error)
+        res.status(404).send('erreur code!!')
     }
 })
 router.post('/supCommand/:id', auth, async (req, res) => { //supp une commande deja faite
@@ -260,6 +255,103 @@ router.post('/getBack/:id', auth, async (req, res) => { // rendre un article d'u
 
     } catch (error) {
         res.status(500).send(error)
+    }
+
+})
+router.post('/getBackAdmin/:id', auth, async (req, res) => { // recuperer un article d'une commande
+    try {
+        const command = await Command.findOne({ 'commands._id': req.params.id })
+        if (!command) {
+            return res.status(404).send('pas de produit')
+        }
+        await command.commands.forEach((one) => {
+
+            if (one._id == req.params.id) {
+                one.rendu = true
+                one.enabled = false
+                command.total -= (one.price * one.quantity)
+                command.updatedAt = new Date()
+                
+            }
+        });
+        let i = 0
+        await command.commands.forEach((command) => {
+
+            if (command.enabled == true) {
+                i++
+            }
+        });
+        if (i > 0) {
+            await command.save()
+        } else {
+            command.enabled = false
+            command.total = 0
+            command.commission = 0
+            await command.save()
+        }
+
+        res.send(command)
+
+    } catch (error) {
+        res.status(500).send("operation non effectuée")
+    }
+
+})
+router.post('/getBackAdminWithComm/:id', auth, async (req, res) => { // recuperer un article d'une commande
+    try {
+        const command = await Command.findOne({ 'commands._id': req.params.id })
+        if (!command) {
+            return res.status(404).send('pas de produit')
+        }
+        await command.commands.forEach((one) => {
+
+            if (one._id == req.params.id) {
+                one.rendu = true
+                one.enabled = false
+                command.total -= (one.price * one.quantity)
+                command.updatedAt = new Date()
+
+            }
+        });
+        let i = 0
+        await command.commands.forEach((command) => {
+
+            if (command.enabled == true) {
+                i++
+            }
+        });
+        if (i > 0) {
+            await command.save()
+        } else {
+            command.enabled = false
+            command.total = 0
+            await command.save()
+        }
+
+        res.send(command)
+
+    } catch (error) {
+        res.status(500).send("operation non effectuée")
+    }
+
+})
+router.post('/noGetBackAdmin/:id', auth, async (req, res) => { // recuperer un article d'une commande
+    try {
+        const command = await Command.findOne({ 'commands._id': req.params.id })
+        if (!command) {
+            return res.status(404).send('pas de produit')
+        }
+        await command.commands.forEach((one) => {
+
+            if (one._id == req.params.id) {
+                one.wtgb = false
+            }
+        });
+        await command.save() //delete a command it's like save()
+        res.send(command)
+
+    } catch (error) {
+        res.status(500).send("operation non effectuée")
     }
 
 })

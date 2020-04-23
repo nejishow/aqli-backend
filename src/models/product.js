@@ -24,12 +24,7 @@ const productSchema = new mongoose.Schema({
             required: true
         }
     }],
-    attributes: [{
-        Couleurs: [{
-            color: {
-                type: String,
-            }
-        }],
+
         Tailles: [{
             size: {
                 type: Number,
@@ -39,19 +34,13 @@ const productSchema = new mongoose.Schema({
                     }
                 }
             }
-        }],
-        Stockages: [{
-            stockage: {
-                type: Number,
-                validate(value) {
-                    if (!validator.isNumeric) {
-                        throw new Error('Ecrivez un nombre pour le stockage')
-                    }
-                }
-            }
-        }]
-    },
-
+        }
+    ],
+    Couleurs: [{
+        color: {
+            type: String
+        }
+    }
     ],
     description: {
         type: Array,
@@ -63,22 +52,21 @@ const productSchema = new mongoose.Schema({
             required: true
         }
     }],
-    keywords: [{
-        keyword: {
+    keywords: {
             type: String,
             required: true
-        }
-    }],
+    },
     garantit: {
-        type: String
+        type: Number,
+        default: 0
     },
     enabled: {
         type: Boolean,
-        required: true
+        default: true
     },
     inStock: {
         type: Boolean,
-        required: true
+        default: true
     },
     serial: {
         type: Number,
