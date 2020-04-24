@@ -38,6 +38,15 @@ const commandSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
+        garantit: {
+            type: String,
+            required: true
+        },
+        serial: {
+            type: String,
+            required: true
+        }
+        
     }],
     total: {
         type: Number,

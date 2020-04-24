@@ -26,6 +26,10 @@ const panierSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    garantit: {
+        type: Number,
+        required: true
+    },
     color: {
         type: String,
     },
