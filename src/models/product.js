@@ -46,12 +46,11 @@ const productSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
-    idProductTypes: [{
-        idProductType: {
+    idProductType: {
             type: mongoose.Schema.Types.ObjectId,
             required: true
-        }
-    }],
+
+    },
     keywords: {
             type: String,
             required: true

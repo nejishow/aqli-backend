@@ -4,8 +4,8 @@ const Product = require("../models/product")
 const Favoris = require('../models/favoris')
 const auth = require('../middleware/auth')
 
-router.post('/product', auth, async (req, res) => {
-    const product = new Product(req.body)
+router.post('/productAdmin', auth, async (req, res) => { //creer un nouveau produit
+    const product = new Product(req.body.params)
     try {
         await product.save()
         return res.status(200).send(product)
@@ -14,10 +14,9 @@ router.post('/product', auth, async (req, res) => {
     }
 })
 
-
-router.get('/products/:idProductType', async (req, res) => {
+router.get('/products/:idProductType', async (req, res) => { //retrouver un produit grace au productType
     try {
-        const products = await Product.find({ 'idProductTypes.idProductType': req.params.idProductType })
+        const products = await Product.find({ idProductType: req.params.idProductType })
         if (!products) {
             return res.send(400).send({ 'error': 'Pas de produits' })
         }
@@ -26,19 +25,19 @@ router.get('/products/:idProductType', async (req, res) => {
         res.status(500).send()
     }
 })
-router.get('/product/:id', async (req, res) => {
+router.get('/product/:id', async (req, res) => { // retrouver un produit grace à l'id
     try {
-        const products = await Product.findById({ _id: req.params.id })
-        if (!products) {
-            return res.send(400).send({ 'error': 'Pas de produits' })
+        const product = await Product.findById({ _id: req.params.id })
+        if (!product) {
+            return res.status(400).send({ 'error': 'Pas de produits' })
         }
-        res.status(201).send(products)
+        res.status(201).send(product)
     } catch (error) {
         res.status(500).send()
     }
 })
 
-router.get('/allProduct', async (req, res) => {
+router.get('/allProductAdmin', async (req, res) => { // retrouver tout les produits
     try {
         const products = await Product.find({})
         if (!products) {
@@ -50,7 +49,7 @@ router.get('/allProduct', async (req, res) => {
     }
 })
 
-router.patch('/product', auth, async (req, res) => {
+router.patch('/product', auth, async (req, res) => { // modifier un produit
     const updates = Object.keys(req.body)
     const allowedUpdate = ['name', 'price', 'pics', 'colors', 'size', 'description'];
     const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
@@ -67,7 +66,7 @@ router.patch('/product', auth, async (req, res) => {
     }
 })
 
-router.delete('/product', auth, async (req, res) => {
+router.delete('/product', auth, async (req, res) => { // supprimer un produit
     try {
         const product = await Product.findById({ _id: req.body._id })
         await product.remove() //delete a product it's like save()
@@ -78,6 +77,11 @@ router.delete('/product', auth, async (req, res) => {
     }
 
 })
+
+
+
+
+
 
 
 router.get('/likeProduct/:id', auth, async (req, res) => {  // check if the product was liked by the user

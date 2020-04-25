@@ -107,7 +107,6 @@ router.get('/command/:id', auth, async (req, res) => {    // get a command for a
 })
 
 router.patch('/command/:id', auth, async (req, res) => { // confirmer reception
-    console.log(req.params.id)    
     try {
         const command = await Command.findOne({ _id: req.params.id, password: req.body.params })
         if (!command) {
