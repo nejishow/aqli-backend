@@ -142,34 +142,37 @@ router.post('/likeProduct/:id', auth, async (req, res) => { // like the product
 })
 
 
-router.get('/allRatingProduct/:id', async (req, res) => {   // how many time the product was liked
+router.post('/rateProduct/:id', auth, async (req, res) => { // rate the product
+
     try {
-        const ratings = await Rating.find({ idProduct: req.params.id})
-        if (!ratings) {
-            return res.status(200).send({
-                idProduct: req.params.id,
-                rating: 0
+        const product = await Product.findOne({ 'ratings.idUser': req.user._id, _id: req.params.id })
+        if (product) {
+            await product.ratings.forEach(rating => {
+                if (rating.idUser== req.user._id) {
+                    rating.rating = req.body.params
+                }
             })
-        }
-        return res.status(200).send(ratings)
-    } catch (error) {
-        return res.status(404).send(error)
-    }
-
-})
-router.post('/rateProduct/:id', auth, async (req, res) => { // like the product
-
-    try {
-        const rating = await Rating.findOne({ idUser: req.user._id, idProduct: req.params.id })
-        if (rating) {
-            rating.rating = req.body.params
-            await rating.save()
+            let ratingValue = 0
+            let count = 0
+            await product.ratings.forEach(rating => {
+                count++ 
+                ratingValue += rating.rating
+            })
+            product.rating = ( ratingValue / count )
+            await product.save()
             return res.status(201).send(rating)
 
         } else {
-            const newRating = await Rating({ idUser: req.user._id, idProduct: req.params.id, rating: req.body.params})
-            await newRating.save()
-            return res.status(200).send(newRating)
+            await product.ratings.concat({ idUser: req.user._id, rating: req.body.params })
+            let ratingValue = 0
+            let count = 0
+            await product.ratings.forEach(rating => {
+                count++
+                ratingValue += rating.rating
+            })
+            product.rating = (ratingValue / count)
+            await product.save()
+            return res.status(200).send(product)
         }
     } catch (error) {
         res.status(400).send(error)

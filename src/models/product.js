@@ -42,6 +42,19 @@ const productSchema = new mongoose.Schema({
         }
     }
     ],
+    ratings: [{
+        idUser: {
+            type: mongoose.Schema.Types.ObjectId
+        },
+        rating: {
+            type: Number
+        }
+    }
+    ],
+    rating: {
+        type: Number,
+        default: 0
+    },
     description: {
         type: Array,
         required: true
