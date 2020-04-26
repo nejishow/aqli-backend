@@ -2,6 +2,7 @@ const express = require("express")
 const router = new express.Router()
 const Product = require("../models/product")
 const Favoris = require('../models/favoris')
+const Rating = require('../models/rating')
 const auth = require('../middleware/auth')
 
 router.post('/productAdmin', auth, async (req, res) => { //creer un nouveau produit
@@ -134,6 +135,41 @@ router.post('/likeProduct/:id', auth, async (req, res) => { // like the product
             const newFavori = await Favoris({idUser:req.user._id,idProduct:req.params.id,name:req.body.params.name,src:req.body.params.pics[0].src})
             await newFavori.save()
             return res.status(200).send(newFavori)
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+
+router.get('/allRatingProduct/:id', async (req, res) => {   // how many time the product was liked
+    try {
+        const ratings = await Rating.find({ idProduct: req.params.id})
+        if (!ratings) {
+            return res.status(200).send({
+                idProduct: req.params.id,
+                rating: 0
+            })
+        }
+        return res.status(200).send(ratings)
+    } catch (error) {
+        return res.status(404).send(error)
+    }
+
+})
+router.post('/rateProduct/:id', auth, async (req, res) => { // like the product
+
+    try {
+        const rating = await Rating.findOne({ idUser: req.user._id, idProduct: req.params.id })
+        if (rating) {
+            rating.rating = req.body.params
+            await rating.save()
+            return res.status(201).send(rating)
+
+        } else {
+            const newRating = await Rating({ idUser: req.user._id, idProduct: req.params.id, rating: req.body.params})
+            await newRating.save()
+            return res.status(200).send(newRating)
         }
     } catch (error) {
         res.status(400).send(error)
