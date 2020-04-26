@@ -9,7 +9,7 @@ const auth = require('../middleware/auth')
 //post
 
 router.post('/category', auth, async (req, res) => {
-    const category = new Category(req.body)
+    const category = new Category(req.body.params)
     try {
         await category.save()
         return res.status(200).send(category)
@@ -18,7 +18,7 @@ router.post('/category', auth, async (req, res) => {
     }
 })
 router.post('/subCategory', auth, async (req, res) => {
-    const subCategory = new SubCategory(req.body)
+    const subCategory = new SubCategory(req.body.params)
     try {
         await subCategory.save()
         return res.status(200).send(subCategory)
@@ -27,7 +27,9 @@ router.post('/subCategory', auth, async (req, res) => {
     }
 })
 router.post('/productType', auth, async (req, res) => {
-    const productType = new ProductType(req.body)
+    console.log(req.body.params);
+    
+    const productType = new ProductType(req.body.params)
     try {
         await productType.save()
         return res.status(200).send(productType)
@@ -146,6 +148,17 @@ router.get('/allProductType', async (req, res) => {
             return res.status(400).send({ 'error': 'Type de produit inexistant' })
         }
         return res.send(productTypes)
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+router.get('/allProduct', async (req, res) => {
+    try {
+        const products = await Product.find({})
+        if (!products) {
+            return res.status(400).send({ 'error': 'produits inexistant' })
+        }
+        return res.send(products)
     } catch (error) {
         res.status(500).send()
     }
