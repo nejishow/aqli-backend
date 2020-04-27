@@ -148,29 +148,34 @@ router.post('/rateProduct/:id', auth, async (req, res) => { // rate the product
         const product = await Product.findOne({ 'ratings.idUser': req.user._id, _id: req.params.id })
         if (product) {
             await product.ratings.forEach(rating => {
-                if (rating.idUser== req.user._id) {
+                if (rating.idUser.toString() == req.user._id.toString()) {                    
                     rating.rating = req.body.params
                 }
             })
+
             let ratingValue = 0
             let count = 0
             await product.ratings.forEach(rating => {
                 count++ 
                 ratingValue += rating.rating
-            })
-            product.rating = ( ratingValue / count )
+            })      
+            product.rating = (ratingValue / count)            
             await product.save()
-            return res.status(201).send(rating)
+            return res.status(201).send(product)
 
         } else {
-            await product.ratings.concat({ idUser: req.user._id, rating: req.body.params })
+            const product = await Product.findById({_id: req.params.id })
+            await product.ratings.push({ idUser: req.user._id, rating: req.body.params })
             let ratingValue = 0
             let count = 0
+            
             await product.ratings.forEach(rating => {
                 count++
                 ratingValue += rating.rating
             })
+
             product.rating = (ratingValue / count)
+
             await product.save()
             return res.status(200).send(product)
         }
