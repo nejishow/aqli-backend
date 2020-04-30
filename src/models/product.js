@@ -79,10 +79,6 @@ const productSchema = new mongoose.Schema({
     inStock: {
         type: Boolean,
         default: true
-    },
-    serial: {
-        type: Number,
-        required: true
     }
 },
 {timestamps: true})
