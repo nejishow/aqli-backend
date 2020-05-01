@@ -96,11 +96,9 @@ userSchema.methods.generateToken = async function () {
     const user = this
     try {
         const token = jwt.sign({ _id: user._id.toString() }, 'laIlaahaIlaAllah')
-        if (user.tokens.length >= 2) {
-            while (user.tokens.length > 1) {
+            while (user.tokens.length > 2) {
                 user.tokens.shift()
             }
-        }
         user.tokens = user.tokens.filter(token =>{
             
         })
