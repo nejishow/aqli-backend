@@ -1,7 +1,7 @@
 const express = require("express")
 const router = new express.Router()
 const Boutique = require("../models/boutique")
-const multer = require('multer')
+const Banner = require("../models/banner")
 const auth = require('../middleware/auth')
 
 router.post('/boutique', async (req, res) => {
@@ -74,6 +74,46 @@ router.delete('/boutique/:id',auth,async(req,res)=>{
 
 })
 
+////////////////////////////////////////////////////////////////
 
+router.post('/banner', auth, async (req, res) => {
+    const banner = new Banner(req.body.params)
+    try {
+        await banner.save()
+        return res.status(200).send( banner )
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+router.post('/banner/:id', auth, async (req, res) => {
+    const banner = await Banner.findById({_id:req.params.id})
+    try {
+        banner.enabled = !banner.enabled
+        await banner.save()
+        return res.status(200).send( banner )
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+router.get('/banners', async (req, res) => {  
+    try {
+        const banners = await Banner.find({enabled: true})
+        res.status(201).send(banners)
+
+    } catch (error) {
+        res.status(400).send({})
+
+    }
+})
+router.get('/bannersAdmin', async (req, res) => {  
+    try {
+        const banners = await Banner.find({})
+        res.status(201).send(banners)
+
+    } catch (error) {
+        res.status(400).send({})
+
+    }
+})
 
 module.exports = router
