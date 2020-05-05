@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken')
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
     },
     address: {
         type: String
@@ -41,7 +40,6 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true
     },
     avatar: {
         type: String,
@@ -54,8 +52,7 @@ const userSchema = new mongoose.Schema({
     }],
     enabled: {
         type: Boolean,
-        required:true
-    },
+    default: true    },
     isAdmin: {
         type: Boolean,
         default: false
