@@ -5,7 +5,7 @@ const multer = require('multer')
 const auth = require('../middleware/auth')
 
 router.post('/users', async (req, res) => {
-    const user = new User(req.body)
+    const user = new User(req.body.params)
     try {
         const token = await user.generateToken()
         return res.status(201).send({user, token})
