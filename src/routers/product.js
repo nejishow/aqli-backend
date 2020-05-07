@@ -50,16 +50,11 @@ router.get('/allProductAdmin', async (req, res) => { // retrouver tout les produ
     }
 })
 
-router.patch('/product', auth, async (req, res) => { // modifier un produit
-    const updates = Object.keys(req.body)
-    const allowedUpdate = ['name', 'price', 'pics', 'colors', 'size', 'description'];
-    const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
-    if (!isValidOperation) {
-        return res.status(400).send({ 'error': 'Modifications invalides' })
-    }
+router.post('/productUpdate', auth, async (req, res) => { // modifier un produit
+    const updates = Object.keys(req.body.params)
     try {
-        const product = await Product.findById({ _id: req.body._id })
-        updates.forEach((update) => product[update] = req.body[update])
+        const product = await Product.findById({ _id: req.body.params._id })
+        updates.forEach((update) => product[update] = req.body.params[update])
         await product.save()
         return res.send(product)
     } catch (error) {
