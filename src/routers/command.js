@@ -1,6 +1,7 @@
 const express = require("express")
 const router = new express.Router()
 const Command = require("../models/commands")
+const Boutique = require("../models/boutique")
 const auth = require('../middleware/auth')
 const accountSid = 'ACe70a130659cb6ac4e507aa1424b3c7b3';
 const authToken = '64a35b62640421c1207f43596d0d6454';
@@ -16,7 +17,7 @@ router.post('/command', auth, async (req, res) => { // post a command
     sms = []
     await command.commands.forEach(element => {
         sms.push(
-            element.quantity + ' ' + element.name +', '
+            element.quantity + ' x ' + element.name +', '
         ) 
     });
     try {
@@ -26,6 +27,15 @@ router.post('/command', auth, async (req, res) => { // post a command
         });
         command.password = password
         await command.save()
+        await command.commands.forEach(async element => {
+            const boutique = await Boutique.find({ _id: element.owner })
+            client.messages
+                .create({
+                    body: 'Aqli commande: ' + element.quantity + ' x ' + element.name ,
+                    from: '+12268060224',
+                    to: '+253' + boutique[0].number
+                })
+        });
         client.messages
             .create({
                 body: 'Aqli commande: ' + sms + ' pour un total de : ' + command.total + 'fdj. Aqli à votre service. Code: '+ password,

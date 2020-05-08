@@ -10,6 +10,10 @@ const commandSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             required: true
         },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
+        },
         name: {
             type: String,
             required: true
@@ -50,10 +54,6 @@ const commandSchema = new mongoose.Schema({
     received: {
         type: Boolean,
         default: false
-    },
-    commission: {
-        type: Number,
-        default: 500
     },
     enabled: {
         type: Boolean,
