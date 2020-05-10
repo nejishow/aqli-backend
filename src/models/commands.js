@@ -43,9 +43,17 @@ const commandSchema = new mongoose.Schema({
             required: true
         },
         garantit: {
+            type: Number,
+            required: true
+        },
+        boutique: {
             type: String,
             required: true
-        }
+        },
+        number: {
+            type: Number,
+            required: true
+        },
     }],
     total: {
         type: Number,

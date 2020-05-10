@@ -46,7 +46,16 @@ const panierSchema = new mongoose.Schema({
     enabled: {
         type: Boolean,
         required: true
-    }
+    },
+    boutique: {
+        type: String,
+        required: true
+    },
+    number: {
+        type: Number,
+        required: true
+    },
+
 },
     { timestamps: true })
 

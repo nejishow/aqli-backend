@@ -189,7 +189,7 @@ router.post('/command/:id', auth, async (req, res) => { //annuler une commande e
         await command.save() //delete a command it's like save()
         client.messages
             .create({
-                body: 'ID: '+req.user._id+' vient d\'annuler toute une commande',
+                body: 'ID: '+req.user.name+' vient d\'annuler toute une commande',
                 from: '+12268060224',
                 to: '+25377484707'
             })
@@ -225,7 +225,7 @@ router.post('/commandItem/:id', auth, async (req, res) => { // annuler un articl
             await command.save()
             client.messages
                 .create({
-                    body: 'ID: ' + req.user._id + ' vient d\'annuler un article d\'une commande',
+                    body: 'ID: ' + req.user.name + ' vient d\'annuler un article d\'une commande',
                     from: '+12268060224',
                     to: '+25377484707'
                 })
@@ -234,7 +234,7 @@ router.post('/commandItem/:id', auth, async (req, res) => { // annuler un articl
             command.total = 0
             client.messages
                 .create({
-                    body: 'ID: ' + req.user._id + ' vient d\'annuler toute une commande',
+                    body: 'ID: ' + req.user.name + ' vient d\'annuler toute une commande',
                     from: '+12268060224',
                     to: '+25377484707'
                 })

@@ -13,7 +13,7 @@ router.post('/boutique', async (req, res) => {
         res.status(400).send(error)
     }
 })
-router.get('/boutique/:id', auth, async (req, res) => {  
+router.get('/boutique/:id', async (req, res) => {  
     try {
         const boutique = await Boutique.findById({ _id: req.params.id })
         if (!boutique) {
