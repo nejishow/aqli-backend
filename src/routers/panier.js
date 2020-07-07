@@ -12,7 +12,7 @@ router.post('/panier', auth, async (req, res) => {
         await panier.save()
         return res.status(200).send(panier)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 
@@ -21,11 +21,11 @@ router.get('/panier', auth, async (req, res) => {
     try {
         const paniers = await Panier.find({ idUser: req.user._id })
         if (!paniers) {
-            return res.send(400).send({ 'error': 'Panier vide' })
+            return res.send(404).send({ 'error': 'Panier vide' })
         }
         res.status(201).send(paniers)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 
@@ -34,12 +34,12 @@ router.patch('/panier/:id', auth, async (req, res) => {
     const allowedUpdate = ['quantity'];
     const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
     if (!isValidOperation) {
-        return res.status(400).send({ 'error': 'Modifications invalides' })
+        return res.status(404).send({ 'error': 'Modifications invalides' })
     }
     try {        
         const panier = await Panier.findById({ _id: req.params.id})
         if (!panier) {
-            return res.status(400).send({error:'Produit inexistant'})
+            return res.status(404).send({error:'Produit inexistant'})
         }
         panier.quantity = req.body.params.quantity
         await panier.save()
@@ -58,7 +58,7 @@ router.delete('/panier/:id', auth, async (req, res) => {
         res.send({ 'message': panier.name + ' a bien eté supprimé du panier' })
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })
@@ -74,7 +74,7 @@ router.delete('/panier', auth, async (req, res) => {
         res.send({ 'message': 'Le panier est vide maintenant' })
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })

@@ -9,19 +9,19 @@ router.post('/address', auth, async (req, res) => {
         await address.save()
         return res.status(200).send(address)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.post('/address/:id', async (req, res) => {    
     try {
         const address = await Address.findById({ _id: req.params.id })        
     if (!address) {
-        return res.status(400).send('Pas d\'addresse trouvée')
+        return res.status(404).send('Pas d\'addresse trouvée')
     }
         await address.addPoint(req.body.params.points)
         return res.status(200).send(address)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.get('/alladdress', auth, async (req, res) => {
@@ -33,7 +33,7 @@ router.get('/alladdress', auth, async (req, res) => {
         res.status(201).send(addresss)
 
     } catch (error) {
-        res.status(400).send({})
+        res.status(404).send({})
 
     }
 })
@@ -47,7 +47,7 @@ router.get('/alladdressAdmin', auth, async (req, res) => {
         res.status(201).send(addresss)
 
     } catch (error) {
-        res.status(400).send({})
+        res.status(404).send({})
 
     }
 })
@@ -64,7 +64,7 @@ router.delete('/pointAddress/:id', auth, async (req, res) => {
         res.send(address)
 
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 
 })
@@ -79,7 +79,7 @@ router.delete('/address/:id', auth, async (req, res) => {
         res.send(address)
 
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 
 })
@@ -94,7 +94,7 @@ router.post('/enableAddress/:id', auth, async (req, res) => {
         res.send(address)
 
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 
 })

@@ -11,7 +11,7 @@ router.post('/productAdmin', auth, async (req, res) => { //creer un nouveau prod
         await product.save()
         return res.status(200).send(product)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 
@@ -30,11 +30,11 @@ router.get('/product/:id', async (req, res) => { // retrouver un produit grace �
     try {
         const product = await Product.findById({ _id: req.params.id })
         if (!product) {
-            return res.status(400).send({ 'error': 'Pas de produits' })
+            return res.status(404).send({ 'error': 'Pas de produits' })
         }
         res.status(201).send(product)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 
@@ -42,11 +42,11 @@ router.get('/allProductAdmin', async (req, res) => { // retrouver tout les produ
     try {
         const products = await Product.find({})
         if (!products) {
-            return res.send(400).send({ 'error': 'Pas de produits' })
+            return res.send(404).send({ 'error': 'Pas de produits' })
         }
         res.status(201).send(products)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 
@@ -69,7 +69,7 @@ router.delete('/product', auth, async (req, res) => { // supprimer un produit
         res.send({ 'message': 'Le produit a bien eté supprimé' })
 
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 
 })
@@ -90,7 +90,7 @@ router.get('/likeProduct/:id', auth, async (req, res) => {  // check if the prod
             return res.status(200).send()
         }
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.get('/allLikeProduct/:id', async (req, res) => {   // how many time the product was liked
@@ -132,7 +132,7 @@ router.post('/likeProduct/:id', auth, async (req, res) => { // like the product
             return res.status(200).send(newFavori)
         }
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 
@@ -175,7 +175,7 @@ router.post('/rateProduct/:id', auth, async (req, res) => { // rate the product
             return res.status(200).send(product)
         }
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 

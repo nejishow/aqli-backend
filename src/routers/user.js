@@ -9,7 +9,7 @@ router.post('/users', async (req, res) => {
         const token = await user.generateToken()
         return res.status(201).send({user, token})
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.get('/users/me',auth, async (req, res) => {    
@@ -28,7 +28,7 @@ router.patch('/users/me', auth, async (req, res) => {
         await user.save()
         return res.send(user)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 })
 
@@ -38,7 +38,7 @@ router.delete('/users/me',auth,async(req,res)=>{
         res.send(req.user)
 
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 
 })
@@ -69,7 +69,7 @@ router.post('/users/logout', auth, async (req, res) => {
         await req.user.save()
         res.send()
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
 
     }
 })
@@ -79,7 +79,7 @@ router.post('/users/logoutAll',auth, async (req, res)=>{
         await req.user.save()
         res.send()
     } catch (error) {
-        res.status(500).send({error})
+        res.status(404).send({error})
 
     }
 })
@@ -95,7 +95,7 @@ router.get('/users/:id', auth, async (req, res) => {  // get one user
         }
         res.status(200).send(user)
     } catch (error) {
-        res.status(500).send('Problem de serveur')
+        res.status(404).send('Problem de serveur')
     }
 })
 router.get('/allUsers', auth, async (req, res) => {  // get All user
@@ -106,7 +106,7 @@ router.get('/allUsers', auth, async (req, res) => {  // get All user
         }
         res.status(200).send(users)
     } catch (error) {
-        res.status(500).send('Problem de serveur')
+        res.status(404).send('Problem de serveur')
     }
 })
     

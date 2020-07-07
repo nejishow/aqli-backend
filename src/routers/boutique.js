@@ -10,7 +10,7 @@ router.post('/boutique', async (req, res) => {
         await boutique.save()
         return res.status(200).send( boutique )
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.get('/boutique/:id', async (req, res) => {  
@@ -22,7 +22,7 @@ router.get('/boutique/:id', async (req, res) => {
         res.status(201).send(boutique)
 
     } catch (error) {
-        res.status(400).send({})
+        res.status(404).send({})
 
     }
 })
@@ -35,7 +35,7 @@ router.get('/allBoutique', auth, async (req, res) => {
         res.status(201).send(boutiques)
 
     } catch (error) {
-        res.status(400).send({})
+        res.status(404).send({})
 
     }})
 
@@ -44,7 +44,7 @@ router.patch('/boutique/:id',auth, async (req, res) => {
     const allowedUpdate = ['name', 'email', 'address','proprio','number'];
     const isValidOperation = updates.every((update) => allowedUpdate.includes(update))
     if (!isValidOperation) {
-        return res.status(400).send({ 'error': 'Modifications invalides' })
+        return res.status(404).send({ 'error': 'Modifications invalides' })
     }
     try {
         const boutique = await Boutique.findById({ _id: req.params.id })
@@ -69,7 +69,7 @@ router.delete('/boutique/:id',auth,async(req,res)=>{
         res.send(boutique)
 
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 
 })
@@ -82,7 +82,7 @@ router.post('/banner', auth, async (req, res) => {
         await banner.save()
         return res.status(200).send( banner )
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.post('/banner/:id', auth, async (req, res) => {
@@ -92,7 +92,7 @@ router.post('/banner/:id', auth, async (req, res) => {
         await banner.save()
         return res.status(200).send( banner )
     } catch (error) {
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 router.get('/banners', async (req, res) => {  
@@ -101,7 +101,7 @@ router.get('/banners', async (req, res) => {
         res.status(201).send(banners)
 
     } catch (error) {
-        res.status(400).send({})
+        res.status(404).send({})
 
     }
 })
@@ -111,7 +111,7 @@ router.get('/bannersAdmin', async (req, res) => {
         res.status(201).send(banners)
 
     } catch (error) {
-        res.status(400).send({})
+        res.status(404).send({})
 
     }
 })

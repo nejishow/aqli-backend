@@ -45,7 +45,7 @@ router.post('/command', auth, async (req, res) => { // post a command
         return res.status(200).send(command)
     } catch (error) {
         console.log(error)
-        res.status(400).send(error)
+        res.status(404).send(error)
     }
 })
 
@@ -54,66 +54,66 @@ router.get('/commands', auth, async (req, res) => {  // get all enabled command 
     try {
         const commands = await Command.find({ idUser: req.user._id, enabled: true })
         if (!commands) {
-            return res.send(400).send({ 'error': 'command vide' })
+            return res.send(404).send({ 'error': 'command vide' })
         }
         res.status(201).send(commands)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 router.get('/adminCommands', auth, async (req, res) => {  // get all command for the admin
     try {
         const commands = await Command.find({})
         if (!commands) {
-            return res.send(400).send({ 'error': 'command vide' })
+            return res.send(404).send({ 'error': 'command vide' })
         }
         res.status(201).send(commands)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 router.get('/newCommand', auth, async (req, res) => {  // get all new command for the admin
     try {
         const commands = await Command.find({received: false, enabled: true})
         if (!commands) {
-            return res.send(400).send({ 'error': 'command vide' })
+            return res.send(404).send({ 'error': 'command vide' })
         }
         res.status(201).send(commands)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 router.get('/completedCommand', auth, async (req, res) => {  // get all completed command for the admin
     try {
         const commands = await Command.find({ received: true })
         if (!commands) {
-            return res.send(400).send({ 'error': 'command vide' })
+            return res.send(404).send({ 'error': 'command vide' })
         }
         res.status(201).send(commands)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 router.get('/cancelledCommand', auth, async (req, res) => {  // get all cancelled command for the admin
     try {
         const commands = await Command.find({ enabled: false, received: false })
         if (!commands) {
-            return res.send(400).send({ 'error': 'command vide' })
+            return res.send(404).send({ 'error': 'command vide' })
         }
         res.status(201).send(commands)
     } catch (error) {
-        res.status(500).send()
+        res.status(404).send()
     }
 })
 router.get('/command/:id', auth, async (req, res) => {    // get a command for anyone
     try {
         const command = await Command.findById({ _id: req.params.id })
         if (!command) {
-            return res.send(400).send({ 'error': 'command vide' })
+            return res.send(404).send({ 'error': 'command vide' })
         }
         res.status(201).send(command)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 })
 
@@ -121,7 +121,7 @@ router.patch('/command/:id', auth, async (req, res) => { // confirmer reception
     try {
         const command = await Command.findOne({ _id: req.params.id, password: req.body.params })
         if (!command) {
-            return res.status(400).send({ error: 'Produit inexistant' })
+            return res.status(404).send({ error: 'Produit inexistant' })
         }
         command.received = true
         await command.save()
@@ -142,7 +142,7 @@ router.post('/supCommand/:id', auth, async (req, res) => { //supp une commande d
         res.send({ 'message': command.name + ' a bien eté supprimé de la liste des commandes' })
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })
@@ -174,7 +174,7 @@ router.post('/supItem/:id', auth, async (req, res) => { // supp un article deja 
         res.send(command)
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })
@@ -196,7 +196,7 @@ router.post('/command/:id', auth, async (req, res) => { //annuler une commande e
         res.send({ 'message': command.name + ' a bien eté supprimé de la liste des commandes' })
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })
@@ -243,7 +243,7 @@ router.post('/commandItem/:id', auth, async (req, res) => { // annuler un articl
         res.send(command)
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })
@@ -264,7 +264,7 @@ router.post('/getBack/:id', auth, async (req, res) => { // rendre un article d'u
         res.send(command)
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(404).send(error)
     }
 
 })
@@ -303,7 +303,7 @@ router.post('/getBackAdmin/:id', auth, async (req, res) => { // recuperer un art
         res.send(command)
 
     } catch (error) {
-        res.status(500).send("operation non effectuée")
+        res.status(404).send("operation non effectuée")
     }
 
 })
@@ -341,7 +341,7 @@ router.post('/getBackAdminWithComm/:id', auth, async (req, res) => { // recupere
         res.send(command)
 
     } catch (error) {
-        res.status(500).send("operation non effectuée")
+        res.status(404).send("operation non effectuée")
     }
 
 })
@@ -361,7 +361,7 @@ router.post('/noGetBackAdmin/:id', auth, async (req, res) => { // recuperer un a
         res.send(command)
 
     } catch (error) {
-        res.status(500).send("operation non effectuée")
+        res.status(404).send("operation non effectuée")
     }
 
 })
