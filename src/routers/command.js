@@ -40,7 +40,7 @@ router.post('/command', auth, async (req, res) => { // post a command
             .create({
                 body: 'Aqli commande: ' + sms + ' pour un total de : ' + command.total + 'fdj. Aqli à votre service. Code: '+ password,
                 from: '+12268060224',
-                to: '+253'+req.user.number
+                to: '+253'+ req.user.number
             })
         return res.status(200).send(command)
     } catch (error) {
