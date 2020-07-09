@@ -29,19 +29,27 @@ router.post('/command', auth, async (req, res) => { // post a command
         await command.save()
         await command.commands.forEach(async element => {
             const boutique = await Boutique.find({ _id: element.owner })
+            
             client.messages
                 .create({
-                    body: 'Aqli commande: ' + element.quantity + ' x ' + element.name ,
+                    body: 'Commande pour Aqli: ' + element.quantity + ' x ' + element.name ,
                     from: '+12268060224',
-                    to: '+253' + boutique[0].number
+                    to: '+253' + parseInt(boutique[0].number)
+                })
+            client.messages
+                .create({
+                    body: 'Commande pour Aqli: ' + element.quantity + ' x ' + element.name + ' de la boutique ' + boutique.name,
+                    from: '+12268060224',
+                    to: '+25377484707'
                 })
         });
         client.messages
             .create({
                 body: 'Aqli commande: ' + sms + ' pour un total de : ' + command.total + 'fdj. Aqli à votre service. Code: '+ password,
                 from: '+12268060224',
-                to: '+253'+ req.user.number
+                to: '+253' + parseInt(req.user.number)
             })
+        
         return res.status(200).send(command)
     } catch (error) {
         console.log(error)
