@@ -44,6 +44,7 @@ router.get('/allProductAdmin', async (req, res) => { // retrouver tout les produ
         if (!products) {
             return res.send(404).send({ 'error': 'Pas de produits' })
         }
+        
         res.status(201).send(products)
     } catch (error) {
         res.status(404).send()
